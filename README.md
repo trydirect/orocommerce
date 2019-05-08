@@ -1,2 +1,2 @@
 # orocommerce
-OROCommerce
+Deploy OROCommerce with docker-compose
