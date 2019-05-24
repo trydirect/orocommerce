@@ -1,0 +1,21 @@
+version: '2'
+
+services:
+  orocommerce-de:
+    build: .
+    image: ${REGISTRY}optimum/crm:orocommerce-de-1.6.13-s
+    container_name: orocommerce-de
+    hostname: orocommerce-de
+    user: root
+    restart: always
+    ports:
+          - "443:443"
+          - "80:80"
+    volumes:
+        - ./app:/home/orocommerce
+        - ./nginx:/etc/nginx/conf.d/
+        - ./certs/letsencrypt:/etc/letsencrypt
+        - ./certs/ssl:/etc/nginx/ssl
+        - ./cron:/var/spool/cron/crontabs
+    entrypoint: /usr/bin/supervisord -c /etc/supervisor/supervisord.conf -n
+    working_dir: /home/${APPUSER}
