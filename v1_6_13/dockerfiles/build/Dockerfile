@@ -6,7 +6,7 @@ RUN apt-get update -y -qq; apt-get install -y -qq nginx sudo supervisor curl cro
     php7.1-curl php7.1-fpm php7.1-gd php7.1-intl php7.1-mcrypt php7.1-mysql php7.1-soap \
     php7.1-xml php7.1-zip php7.1-imagick libfreetype6-dev libmcrypt-dev libpng12-dev; \
     rm -rf /etc/nginx/sites-available/default;rm -rf /etc/nginx/sites-enabled/default;mkdir /run/php; \
-    groupadd -r -g 20000  orocommerce; useradd -r -u 20000 -g 20000 -m -c "app account" -d /home/orocommerce -s /bin/bash orocommerce; \
+    groupadd -r -g 2000  orocommerce; useradd -r -u 2000 -g 2000 -m -c "app account" -d /home/orocommerce -s /bin/bash orocommerce; \
     mkdir -p /opt/letsencrypt
 # COPY ./src/1.6.13.tar.gz /usr/src/app.tar.gz
 RUN wget https://github.com/oroinc/orocommerce-application/releases/download/1.6.39/orocommerce-application-1.6.39.tar.gz -O /usr/src/app.tar.gz
