@@ -34,19 +34,3 @@ services:
         - orocommerce-db:/var/lib/mysql
     env_file:
       .env
-
-  agent:
-    image: ${REGISTRY}trydirect/status
-    container_name: trydirect_agent
-    restart: always
-    ports:
-      - "5000:5000"
-    volumes:
-      - ./nginx:/app/destination_conf
-      - ./nginx_original:/app/origin_conf
-      - ./config.json:/app/config.json
-      - /var/run/docker.sock:/var/run/docker.sock
-    environment:
-      - NGINX_CONTAINER=orocommerce-de
-      - STATUS_PANEL_USERNAME=admin
-      - STATUS_PANEL_PASSWORD=${MYSQL_PASSWORD}
