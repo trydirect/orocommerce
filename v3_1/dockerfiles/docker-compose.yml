@@ -1,0 +1,33 @@
+version: '2.1'
+
+volumes:
+    orocommerce-db:
+      driver: local
+
+services:
+
+  orocommerce:
+    image: trydirect/orocommerce:3.1.7
+    build: build
+    container_name: orocommerce
+    hostname: orocommerce
+    restart: always
+    ports:
+         # - "443:443"
+          - "80:80"
+    volumes:
+#        - ./app:/home/orocommerce
+        - ./configs/nginx:/etc/nginx/conf.d/
+        - ./configs/certs/letsencrypt:/etc/letsencrypt
+        - ./configs/certs/ssl:/etc/nginx/ssl
+        - ./configs/cron:/var/spool/cron/crontabs
+    entrypoint: /usr/bin/supervisord -c /etc/supervisor/supervisord.conf -n
+    env_file: .env
+
+  db:
+    image: mysql:5.7
+    container_name: orocommerce_db
+    restart: always
+    volumes:
+        - orocommerce-db:/var/lib/mysql
+    env_file: .env
