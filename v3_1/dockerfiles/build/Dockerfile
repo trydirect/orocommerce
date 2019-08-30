@@ -15,7 +15,9 @@ RUN yum install -y php-fpm php-cli php-pdo php-mysqlnd php-xml php-soap php-gd p
 
 RUN cd /usr/src && curl -L -o app.tar.gz https://github.com/oroinc/orocommerce/archive/3.1.6.tar.gz
 
-RUN groupadd -r -g 20005  orocommerce; useradd -r -u 20005 -g 20005 -m -c "app user" -d /home/orocommerce -s /bin/bash orocommerce
+RUN groupadd -r -g 20005  orocommerce; useradd -r -u 20005 -g 20005 -m -c "app user" -d /home/orocommerce -s /bin/bash orocommerce \
+    && mkdir -p /var/log/supervisord \
+    && touch /var/log/supervisord/supervisord.log
 
 RUN chown orocommerce:orocommerce  /usr/src/app.tar.gz
 ADD configs/php/fpm/php.ini /etc/php.ini
