@@ -17,7 +17,7 @@ RUN cd /usr/src && curl -L -o app.tar.gz https://github.com/oroinc/orocommerce/a
 
 RUN groupadd -r -g 20005  orocommerce; useradd -r -u 20005 -g 20005 -m -c "app user" -d /home/orocommerce -s /bin/bash orocommerce
 
-RUN chown orocommerce:orocommerce  /usr/src/3.1.6.tar.gz
+RUN chown orocommerce:orocommerce  /usr/src/app.tar.gz
 ADD configs/php/fpm/php.ini /etc/php.ini
 ADD configs/php/www.conf /etc/php-fpm.d/www.conf
 ADD configs/supervisord/orocommerce.conf /etc/supervisor/conf.d/orocommerce.conf
