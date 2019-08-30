@@ -21,6 +21,7 @@ RUN chown orocommerce:orocommerce  /usr/src/app.tar.gz
 ADD configs/php/fpm/php.ini /etc/php.ini
 ADD configs/php/www.conf /etc/php-fpm.d/www.conf
 ADD configs/supervisord/orocommerce.conf /etc/supervisor/conf.d/orocommerce.conf
+ADD configs/supervisord/supervisord.conf /etc/supervisor/supervisord.conf
 ADD scripts/letsencrypt-auto /opt/letsencrypt/letsencrypt-auto
 RUN chmod +x /opt/letsencrypt/letsencrypt-auto; /opt/letsencrypt/letsencrypt-auto  --os-packages-only --install-only --non-interactive
 
