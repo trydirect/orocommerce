@@ -3,7 +3,7 @@ FROM centos:7
 RUN yum update -y && yum install -y epel-release \
     && yum update -y && yum install -y nginx wget git nodejs supervisor yum-utils \
     && wget http://rpms.remirepo.net/enterprise/remi-release-7.rpm && rpm -Uvh remi-release-7.rpm \
-    && yum-config-manager --enable remi-php71 \
+    && yum-config-manager --enable remi-php73 \
     && yum update -y
 
 RUN yum install -y php-fpm php-cli php-pdo php-mysqlnd php-xml php-soap php-gd php-mbstring php-zip php-intl \
