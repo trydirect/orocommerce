@@ -6,24 +6,45 @@ RUN yum update -y && yum install -y epel-release \
     && yum-config-manager --enable remi-php71 \
     && yum update -y
 
-RUN yum install -y php-fpm php-cli php-pdo php-mysqlnd php-xml php-soap php-gd php-mbstring php-zip php-intl \
-    php-mcrypt php-opcache \
+RUN yum install -y php-fpm php-cli php-pdo php-mysqlnd php-xml php-soap php-gd php-mbstring php-zip php-pecl-zip php-intl \
+    php-mcrypt php-opcache php-mysqli \
     && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && php composer-setup.php \
     && php -r "unlink('composer-setup.php');" \
     && mv composer.phar /usr/bin/composer
 
 
-RUN cd /usr/src && curl -OL https://github.com/oroinc/orocommerce/archive/3.1.6.tar.gz
+# orocommerce v3.1.12
+WORKDIR /usr/src
+RUN git clone -b 3.1.12 https://github.com/orocommerce/orocommerce-application-de.git
+WORKDIR /usr/src/orocommerce-application
+RUN curl -s https://getcomposer.org/installer | php \
+    && composer install --prefer-dist --no-dev ; exit 0 \
+    && echo "_*_ Vendor collected! _*_" # pass errors
 
-RUN groupadd -r -g 20005  orocommerce; useradd -r -u 20005 -g 20005 -m -c "app user" -d /home/orocommerce -s /bin/bash orocommerce
+WORKDIR /usr/src
+RUN tar -zcvf app.tar.gz orocommerce-application
 
-RUN chown orocommerce:orocommerce  /usr/src/3.1.6.tar.gz
+RUN groupadd -r -g 20005  orocommerce; useradd -r -u 20005 -g 20005 -m -c "app user" -d /home/orocommerce -s /bin/bash orocommerce \
+    && mkdir -p /var/log/supervisord \
+    && mkdir -p /run/php-fpm \
+    && mkdir -p /var/log/php-fpm \
+    && chown -R orocommerce. /var/log/php-fpm \
+    && touch /run/php-fpm/php-fpm.pid \
+    && chown orocommerce. /run/php-fpm/php-fpm.pid \
+    && touch /var/log/supervisord/supervisord.log \
+    && touch /var/run/supervisord.pid \
+    && chown orocommerce. /var/run/supervisord.pid \
+    && chmod 777 /var/run/supervisord.pid
+
+RUN chown orocommerce:orocommerce  /usr/src/app.tar.gz
 ADD configs/php/fpm/php.ini /etc/php.ini
 ADD configs/php/www.conf /etc/php-fpm.d/www.conf
 ADD configs/supervisord/orocommerce.conf /etc/supervisor/conf.d/orocommerce.conf
+ADD configs/supervisord/supervisord.conf /etc/supervisor/supervisord.conf
 ADD scripts/letsencrypt-auto /opt/letsencrypt/letsencrypt-auto
 RUN chmod +x /opt/letsencrypt/letsencrypt-auto; /opt/letsencrypt/letsencrypt-auto  --os-packages-only --install-only --non-interactive
 
 USER orocommerce
 ENV HOME /home/orocommerce
 WORKDIR /home/orocommerce
+EXPOSE 9000
