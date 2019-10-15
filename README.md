@@ -7,3 +7,9 @@
 
 # orocommerce
 Deploy OROCommerce with docker-compose
+
+
+## Quick deployment to cloud
+##### Amazon AWS, Digital Ocean, Hetzner and others
+[<img src="https://img.shields.io/badge/quick%20deploy-%40try.direct-brightgreen.svg">](https://try.direct/server/user/deploy/Im9yb2NvbW1lcmNlfDZ8MzQi.EIJLoA.C2UnHhbUvk1hLFruZ1Nvdp5FbC4/)
+
