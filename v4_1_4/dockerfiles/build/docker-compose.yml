@@ -1,0 +1,36 @@
+version: '2.1'
+
+volumes:
+  orocommerce-db:
+    driver: local
+
+services:
+  orocommerce:
+    image: trydirect/orocommerce:4.1.4
+    build:
+     context: .
+    container_name: orocommerce
+    restart: always
+    ports:
+          - "443:443"
+          - "80:80"
+    volumes:
+        - ./configs/php/fpm/php.ini:/usr/local/etc/php/php.ini
+        - ./configs/nginx/orocommerce.conf:/etc/nginx/conf.d/default.conf
+        - ./configs/supervisord/orocommerce.conf:/etc/supervisor/conf.d/orocommerce.conf
+        - ./configs/orocommerce/parameters.yml:/var/www/html/orocommerce/config/parameters.yml
+    entrypoint: /usr/bin/supervisord -c /etc/supervisor/supervisord.conf -n
+
+  db:
+    image: mysql:5.7
+    container_name: orocommercedb
+    restart: always
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 30s
+      retries: 10
+    volumes:
+      - orocommerce-db:/var/lib/mysql
+      - ./scripts/mysql.sh:/scripts/mysql.sh
+    env_file:
+      - .env
